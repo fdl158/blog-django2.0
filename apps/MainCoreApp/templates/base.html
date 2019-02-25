@@ -1,0 +1,111 @@
+{% load static %}
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <meta name="keywords" content="blog" />
+    <meta name="description" content="blog" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/m.css' %}" rel="stylesheet">
+    <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+    <script src="{% static 'js/jquery.easyfader.min.js' %}"></script>
+    <script src="{% static 'js/comm.js' %}"></script>
+    <!--[if lt IE 9]>
+<script src="{% static 'js/modernizr.js' %}"></script>
+<![endif]-->
+</head>
+
+<body>
+    <!--top begin-->
+    <header id="header">
+        <div class="navbox">
+            <h2 id="mnavh"><span class="navicon"></span></h2>
+            <div class="logo"><a href="/">{{ user.web_name }}</a></div>
+            <nav>
+                <ul id="starlist">
+                    {% for item in nav %}
+                        {% if item.MainCoreApps_WebSubNavSet_related.all|length_is:0 %}
+                            {% if item.nav_articles_type %}
+                                <li><a href="{% url 'blog:list' item.nav_articles_type.type_name|urlencode %}">{{ item.nav_name }}</a></li>
+                            {% else %}
+                                {% if item.nav_articles_tag %}
+                                     <li><a href="{% url 'blog:list' item.nav_articles_tag.tag_name|urlencode %}">{{ item.nav_name }}</a></li>
+                                {% else %}
+                                     <li><a href="{{ item.nav_url }}">{{ item.nav_name }}</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            <li class="menu">
+                                {% if item.nav_articles_type %}
+                                    <a href="{% url 'blog:list' item.nav_articles_type.type_name|urlencode %}">{{ item.nav_name }}</a>
+                                {% else %}
+                                    {% if item.nav_articles_tag %}
+                                        <a href="{% url 'blog:list' item.nav_articles_tag.tag_name|urlencode %}">{{ item.nav_name }}</a>
+                                    {% else %}
+                                        <a href="{{ item.nav_url }}">{{ item.nav_name }}</a>
+                                    {% endif %}
+                                {% endif %}
+                                <ul class="sub">
+                                    {% for item in item.MainCoreApps_WebSubNavSet_related.all %}
+                                        {% if item.nav_articles_type %}
+                                            <a href="{% url 'blog:list' item.nav_articles_type.type_name|urlencode %}">{{ item.nav_name }}</a>
+                                        {% else %}
+                                            {% if item.nav_articles_tag %}
+                                                <a href="{% url 'blog:list' item.nav_articles_tag.tag_name|urlencode %}">{{ item.nav_name }}</a>
+                                            {% else %}
+                                                <a href="{{ item.nav_url }}">{{ item.nav_name }}</a>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                <span></span>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </nav>
+            <div class="searchico"></div>
+        </div>
+    </header>
+    <div class="searchbox">
+        <div class="search">
+            <form action="" method="post" name="searchform" id="searchform" onsubmit="return false;">
+                <input name="keyboard" id="keyboard" class="input_text" value="请输入关键字词" style="color: rgb(153, 153, 153);" onfocus="if(value=='请输入关键字词'){this.style.color='#000';value=''}" onblur="if(value==''){this.style.color='#999';value='请输入关键字词'}" type="text">
+                <input name="Submit" class="input_submit" value="搜索" type="submit" onclick="Search()" style="cursor: pointer;">
+            </form>
+            <script>
+                function Search() {
+                    window.location.href = encodeURI("/list/" + document.getElementById('keyboard').value + "/");
+                }
+            </script>
+        </div>
+        <div class="searchclose"></div>
+    </div>
+    <!--top end-->
+    <article>
+        <!--lbox begin-->
+        <div class="lbox">
+            {% block lbox %}
+            {% endblock %}
+        </div>
+        <div class="rbox">
+            {% block rbox %}
+            {% endblock %}
+        </div>
+    </article>
+    <footer>
+        <div class="box" style="text-align: center">
+            <div class="endnav">
+                <p>{{ user.copyright }}</p>
+            </div>
+        </div>
+        <a href="#">
+  <div class="top"></div>
+  </a>
+    </footer>
+</body>
+
+</html>

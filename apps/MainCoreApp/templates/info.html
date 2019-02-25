@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+  <div class="lbox">
+{% block lbox %}
+<div class="content_box whitebg">
+  <h2 class="htitle"><span class="con_nav">您现在的位置是：<a href="/">网站首页</a>><a href="{% url 'blog:list' article.article_type.type_name %}">{{ article.article_type.type_name }}</a></span>{{ article.article_type.type_name }}</h2>
+  <h1 class="con_tilte">{{ article.title }}</h1>
+  <p class="bloginfo"><i class="avatar"><img src="{{ MEDIA_URL }}{{ user.photo }}"></i><span>{{ user.name }}</span><span>{{ article.article_brief_time }}</span><span>【<a href="{% url 'blog:list' article.article_type.type_name|urlencode %}">{{ article.article_type.type_name }}</a>】</span><span>{{ article.read_num }}人已围观</span></p>
+  <p class="con_info"><b>简介</b>{{ article.introduction }}</p>
+  <div class="con_text">
+    {% autoescape off %}
+        {{ article.content }}
+    {% endautoescape %}
+    <p>Tags： {% for item in article.article_tags.all %} <a href="{% url 'blog:list' item.tag_name|urlencode %}" target="_blank">{{ item.tag_name }}</a> {% endfor %}</p>
+{#    <p class="share"><b>转载：</b>感谢您对杨青青个人博客网站平台的认可，以及对我们原创作品以及文章的青睐，非常欢迎各位朋友分享到个人站长或者朋友圈，但转载请说明文章出处“来源杨青个人博客”。</p>#}
+    <p><a href="javascript:;" onclick="LikeThisArticle()"><span class="diggit">很赞哦！ (<span id="diggnum">{{ article.like_num }}</span>)</span></a></p>
+      <script>
+        function LikeThisArticle(){
+            $.get({% url 'blog:ThumbUp' %}, {'id': {{ article.id }}}, function(data){
+                alert(data['mg']);
+                $('#diggnum').html(data['tp']);
+            })
+        }
+      </script>
+      <div class="nextinfo">
+      <p>上一篇：{% if up_page %}<a href="{% url 'blog:article' up_page.article_type.type_name|urlencode up_page.title|urlencode %}">{{ up_page.title }}</a></p>{% else %} 无 {% endif %}
+      <p>下一篇：{% if down_page %}<a href="{% url 'blog:article' down_page.article_type.type_name|urlencode down_page.title|urlencode %}">{{ down_page.title }}</a></p>{% else %} 无 {% endif %}
+    </div>
+  </div>
+</div>
+<div class="whitebg">
+  <h2 class="htitle">相关文章</h2>
+  <ul class="otherlink">
+    {% for item in related_article %}
+        <li><a href="{% url 'blog:article' item.article_type.type_name|urlencode item.title|urlencode %}" title="{{ item.title }}">{{ item.title }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="whitebg">
+    <h2 class="htitle">留言</h2>
+    <div class="news_infos m20">
+      <div class="gbox">
+        <form action="" method="post" name="form1" id="form1" onsubmit="return false;">
+          {% csrf_token %}
+            <p> <strong>来说点儿什么吧...</strong></p>
+          <p><span> 您的姓名:</span>
+            <input name="com_username" type="text" id="name">
+            *</p>
+          <input name="email" type="hidden" id="email" value="admin@qq.com">
+          <p><span>选择头像:</span> *</p>
+            <p style="display: flex;"> <i>
+              <input type="radio" value= "{{ MEDIA_URL }}default/tx1.jpg" id= "1" name="com_photo" style="display:none">
+              <img id="a" src="{{ MEDIA_URL }}default/tx1.jpg " onclick="myFun(this.id)"></i> <i>
+              <input type="radio" value= "{{ MEDIA_URL }}default/tx2.jpg" id= "2" name="com_photo" style="display:none">
+              <img id="b" src="{{ MEDIA_URL }}default/tx2.jpg" onclick="myFun(this.id)"></i> <i>
+              <input type="radio" value= "{{ MEDIA_URL }}default/tx3.jpg" id= "3" name="com_photo" style="display:none">
+              <img id="c" src="{{ MEDIA_URL }}default/tx3.jpg" onclick="myFun(this.id)"></i> <i>
+              <input type="radio" value= "{{ MEDIA_URL }}default/tx4.jpg" id= "4" name="com_photo" style="display:none">
+              <img id="d" src="{{ MEDIA_URL }}default/tx4.jpg " onclick="myFun(this.id)"></i> <i>
+              <input type="radio" value= "{{ MEDIA_URL }}default/tx5.jpg" id= "5" name="com_photo" style="display:none">
+              <img id="e" src="{{ MEDIA_URL }}default/tx5.jpg" onclick="myFun(this.id)"></i> <i>
+              <input type="radio" value= "{{ MEDIA_URL }}default/tx6.jpg" id= "6" name="com_photo" style="display:none">
+              <img id="f" src="{{ MEDIA_URL }}default/tx6.jpg" onclick="myFun(this.id)"></i> <i>
+              <input type="radio" value= "{{ MEDIA_URL }}default/tx7.jpg" id= "7" name="com_photo" style="display:none">
+              <img id="g" src="{{ MEDIA_URL }}default/tx7.jpg" onclick="myFun(this.id)"></i> <i>
+              <input type="radio" value= "{{ MEDIA_URL }}default/tx8.jpg" id= "8" name="com_photo" style="display:none">
+              <img id="h" src="{{ MEDIA_URL }}default/tx8.jpg" onclick="myFun(this.id)"></i> </p>
+            <p>
+          <p><span class="tnr">留言内容:</span>
+            <br>
+            <textarea name="com_content" cols="60" rows="12" id="lytext" style="width: 100%"></textarea>
+            <input type="hidden" name="pid" value="{{ article.id }}">
+          </p>
+          <p>
+            <input type="submit" name="Submit3" value="提交" style="
+                display: block;
+                background: #040404;
+                color: #fff;
+                border: 0;
+                line-height: 30px;
+                padding: 0 20px;
+                border-radius: 5px;
+                float: right;
+            ">
+          </p>
+        </form>
+        <div id="comment_commons">
+            {% for item in comments %}
+            <div class="fb">
+                <ul>
+                    <span class="tximg"><img src="{{ MEDIA_URL }}{{ item.com_photo }}"></span>
+                    <p class="fbtime"><span>{{ item.com_make_time }}</span>{{ item.com_username }}</p>
+                    <p class="fbinfo">{{ item.com_content }}</p>
+                </ul>
+            </div>
+              {% if item.MainCoreApp_Reply_related.all %}
+                {% for i in item.MainCoreApp_Reply_related.all %}
+                <div class="hf">
+                    <ul>
+                        <p class="zzhf"><span style='color:#FF0000;margin-right: 10px;'>站长回复:</span>{{ i.content }}</p>
+                    </ul>
+                </div>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+        </div>
+      </div>
+        <style>
+            #comment_commons{margin-top: 60px;}
+            .fb>ul{margin: 10px 0;padding: 20px 10px;border-bottom: #ececec 1px solid;}
+            .tximg {display: block;float: left;margin-right: 10px;}
+            .fbtime {color: #000;}
+            .fbinfo {margin: 10px 0;}
+            .fbtime span {float: right;color: #999;font-size: 12px;overflow: hidden;white-space: nowrap;}
+            .hf {padding-bottom: 20px;border-bottom: #dedddd 1px dashed;}
+            .hf ul {padding: 10px 10px;background: #f9f9f9;}
+        </style>
+<div class="clear"></div>
+<div class="pagelist"></div>
+
+      <script>
+  function myFun(sId) {
+
+    var oImg = document.getElementById('form1').getElementsByTagName('img');
+
+    for (var i = 0; i < oImg.length; i++) {
+      if (oImg[i].id == sId) {
+        oImg[i].previousSibling.previousSibling.checked = true;
+        oImg[i].style.opacity = '1';
+      } else {
+        oImg[i].style.opacity = '.5';
+
+      }
+    }
+  }
+</script>
+<script>
+$('#form1').submit(function () {
+    let form = new FormData(this);
+    $.ajax({
+        type: 'post',
+        data: form,
+        url: document.URL,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            try {
+                if (data) {
+                    insert_cotent = '';
+                    for (var i in data) {
+                        current_data = data[i];
+                        console.log(current_data);
+                        insert_cotent += '<div class="fb"><ul><span class="tximg"><img src="{{ MEDIA_URL }}' + current_data['com_photo'] + '"></span><p class="fbtime"><span>' + current_data['com_make_time'] + '</span>'+ current_data['com_username'] +'</p><p class="fbinfo">' + current_data['com_content'] + '</p></ul></div>';
+                        if (current_data['reply']){
+                            tmp = '';
+                            for (var a=0; a<current_data['reply'].length; a++){
+                                tmp += '<p class="zzhf"><span color="#FF0000">站长回复:</span>' + current_data['reply'][a] + '</p>';
+                            }
+                            insert_cotent += '<div class="hf"><ul>' + tmp + '</ul></div>';
+                        }
+                    }
+                    if (insert_cotent) {
+                        $('#comment_commons').html(insert_cotent);
+                    }
+                }
+                alert('评论成功');
+            } catch (e) {
+                alert(e);
+            }
+        },
+        error: function (data) {
+            data = JSON.parse(data.responseText);
+            error_message = '';
+            for (var a in data) {
+                error_message += data[a];
+            }
+            alert(error_message);
+        }
+    })
+});
+</script>
+    </div>
+  </div>
+</div>
+{% for item in left_adv %}
+<div class="ad whitebg imgscale">
+    <ul>
+        {% autoescape off %}
+            {{ item.content }}
+        {% endautoescape %}
+    </ul>
+</div>
+{% endfor %}
+{% endblock %}
+{% block rbox %}
+<div class="whitebg paihang">
+  <h2 class="htitle">点击排行</h2>
+    <section class="topnews imgscale">
+        {% for item in read_list|slice:'1' %}
+        <a href="{% url 'blog:article' item.article_type.type_name|urlencode item.title|urlencode %}"><img src="{{ MEDIA_URL }}{{ item.cover }}"><span>{{ item.title }}</span></a>
+        {% endfor %}
+    </section>
+    <ul>
+        {% for item in read_list|slice:'1:' %}
+        <li><i></i><a href="{% url 'blog:article' item.article_type.type_name|urlencode item.title|urlencode %}">{{ item.title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="whitebg tuijian">
+    <h2 class="htitle">本栏推荐</h2>
+    {% for item in recommend|slice:'1' %}
+    <section class="topnews imgscale"><a href="{% url 'blog:article' item.article_type.type_name|urlencode item.title|urlencode %}"><img src="{{ MEDIA_URL }}{{ item.cover }}"><span>{{ item.title }}</span></a></section>
+    {% endfor %}
+    <ul>
+        {% for item in recommend|slice:'1:' %}
+        <li><a href="{% url 'blog:article' item.article_type.type_name|urlencode item.title|urlencode %}"><i><img src="{{ MEDIA_URL }}{{ item.cover }}"></i><p>{{ item.title }}</p></a></li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="whitebg cloud">
+  <h2 class="htitle">标签云</h2>
+  <ul>
+    {% for item in article_tag %}
+    <a href="{% url 'blog:list' item.tag_name|urlencode %}" target="_blank">{{ item.tag_name }}</a>
+    {% endfor %}
+  </ul>
+</div>
+{% for item in right_adv %}
+<div class="ad whitebg imgscale">
+    <ul>
+        {% autoescape off %}
+            {{ item.content }}
+        {% endautoescape %}
+    </ul>
+</div>
+{% endfor %}
+{% endblock %}
