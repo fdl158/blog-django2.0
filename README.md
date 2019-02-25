@@ -1,2 +1,3 @@
 # tonight-blog
-django2.1 + xadmin2.0 + 杨青个人博客模板 《今夕何夕》
+django2.1 + xadmin2.0 
+在线查看网址：http:www.delingw.cn
