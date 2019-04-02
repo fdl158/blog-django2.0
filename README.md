@@ -14,7 +14,7 @@ http://www.delingw.cn/article/Django/django%2520admin%2520%25E6%258D%25A2%25E6%2
 
 >    2.下载完后，修改 **blog/settings.py**里面的 **DATABASES** 数据库连接信息!  
 
->   3.然后进入项目下的blog下,(根目录下有manage.py的目录)，目录执行 **python manage.py makemigration**  
+>   3.然后进入项目下的blog下,(根目录下有manage.py的目录)，目录执行 **python manage.py makemigrations**  
 
 >   4.在执行 **python manage.py migrate**  
 
