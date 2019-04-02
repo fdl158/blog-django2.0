@@ -1,7 +1,7 @@
 # django-blog
-django2.1 + xadmin2.0   
+django2.0 + xadmin2.0   
 
->非常感谢大家可以欣赏这个简单bolg博客！是用django2.1+xadmin2.0搭建的，如果感觉这个项目对你有需要的话。请帮我点亮一颗star，多谢！
+>非常感谢大家可以欣赏这个简单bolg博客！是用django2.0+xadmin2.0搭建的，如果感觉这个项目对你有需要的话。请帮我点亮一颗star，多谢！
 
 ### 1.在线查看网址
 http://www.delingw.cn
